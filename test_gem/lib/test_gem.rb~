@@ -1,0 +1,34 @@
+$LOAD_PATH.unshift File.expand_path("../test_gem", __FILE__)
+
+require 'version'
+require 'hello'
+require 'file'
+require 'yaml'
+
+module TestGem
+
+  puts "module TestGem defined"
+
+  class MyArgumentError < ArgumentError; end
+
+  def self.init_config
+    defaults = { "default_file_name" => "default_file.txt",
+      "supported_types" => "[txt, pdf]" }
+    open("config.yml", "w") {|f| f.write(defaults.to_yaml) }
+  end 
+
+  def self.configure the_hash=nil
+    if not FileTest.exist?("config.yml")
+      raise MyArgumentError, 'Could not locate config.yml'
+    end
+
+    parsed = begin
+      YAML.load(File.open("config.yml"))
+    rescue MyArgumentError => e
+      puts "Could not parse YAML: #{e.message}"
+    end
+
+    puts "Those parsed values are: #{parsed}"
+  end
+
+end
