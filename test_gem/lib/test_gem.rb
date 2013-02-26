@@ -17,18 +17,8 @@ module TestGem
     open("config.yml", "w") {|f| f.write(defaults.to_yaml) }
   end 
 
-  def self.configure the_hash=nil
-    if not FileTest.exist?("config.yml")
-      raise MyArgumentError, 'Could not locate config.yml'
-    end
-
-    parsed = begin
-      YAML.load(File.open("config.yml"))
-    rescue MyArgumentError => e
-      puts "Could not parse YAML: #{e.message}"
-    end
-
-    puts "Those parsed values are: #{parsed}"
+  def self.configure the_hash
+    puts "Those parsed values are: #{the_hash}"
   end
 
 end

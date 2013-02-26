@@ -5,27 +5,28 @@ require 'test_gem'
 puts "test_gem script executing"
 puts ARGV[0]
 
-print "Working with file: "
-puts ARGV[0]
-
 if ARGV.include? '--init'
   TestGem.init_config
+elsif ARGV.count == 0
+  if not FileTest.exist?("config.yml")
+    raise MyArgumentError, 'Could not locate config.yml'
+  end
+   parsed = begin
+     YAML.load(File.open("config.yml"))
+   rescue MyArgumentError => e
+     puts "Could not parse YAML: #{e.message}"
+   end
+   parsed.store("Configured in test_gem", "true")
+   TestGem.configure parsed
 else
-  my_hash = { "key1" => "value1",
-          "key2" => "value2",
-          "key3" => "value3" }
+  print "Working with file: "
+  puts ARGV[0]
+  returnVal = TestGem::File.first ARGV[0]
+  print "The chomped first line of that file is: "
+  puts returnVal
 
-  TestGem.configure my_hash
+  returnVal2 = TestGem::File.last ARGV[0]
+  print "The chomped last line of that file is: "
+  puts returnVal2
+  puts "Bye bye, from test_gem"
 end
-
-returnVal = TestGem::File.first ARGV[0]
-
-print "The chomped first line of that file is: "
-puts returnVal
-
-returnVal2 = TestGem::File.last ARGV[0]
-
-print "The chomped last line of that file is: "
-puts returnVal2
-
-puts "Bye bye, from test_gem"

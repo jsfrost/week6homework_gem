@@ -13,7 +13,7 @@ module TestGem
 
   def self.init_config
     defaults = { "default_file_name" => "default_file.txt",
-      "supported_types" => "[txt, pdf]" }
+      "supported_types" => ['txt', 'pdf'] }
     open("config.yml", "w") {|f| f.write(defaults.to_yaml) }
   end 
 
